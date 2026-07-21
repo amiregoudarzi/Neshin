@@ -1,0 +1,6 @@
+@Neshin_Api_HostAddress = http://localhost:5198
+
+GET {{Neshin_Api_HostAddress}}/health
+Accept: application/json
+
+###
