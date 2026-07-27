@@ -21,6 +21,8 @@ public sealed class NeshinReadDbContext(DbContextOptions<NeshinReadDbContext> op
     public DbSet<BranchCustomer> BranchCustomers { get; set; } = null!;
     public DbSet<Order> Orders { get; set; } = null!;
     public DbSet<OrderItem> OrderItems { get; set; } = null!;
+    public DbSet<Invoice> Invoices { get; set; } = null!;
+    public DbSet<InvoiceItem> InvoiceItems { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
         optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);

@@ -70,6 +70,15 @@ internal sealed class BranchConfiguration : IEntityTypeConfiguration<Branch>
             .HasColumnName("cover_image_url")
             .HasMaxLength(2000);
 
+        builder.Property(branch => branch.PhotoUrls)
+            .HasColumnName("photo_urls")
+            .HasColumnType("text[]");
+
+        builder.Property(branch => branch.ManagementKeyHash)
+            .HasColumnName("management_key_hash")
+            .HasMaxLength(64)
+            .IsFixedLength();
+
         builder.Property(branch => branch.CreatedAtUtc)
             .UsePropertyAccessMode(PropertyAccessMode.Property)
             .HasColumnName("created_at_utc")

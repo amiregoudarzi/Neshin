@@ -22,6 +22,8 @@ public sealed class NeshinWriteDbContext(DbContextOptions<NeshinWriteDbContext> 
     public DbSet<BranchCustomer> BranchCustomers { get; set; } = null!;
     public DbSet<Order> Orders { get; set; } = null!;
     public DbSet<OrderItem> OrderItems { get; set; } = null!;
+    public DbSet<Invoice> Invoices { get; set; } = null!;
+    public DbSet<InvoiceItem> InvoiceItems { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -43,5 +45,7 @@ public sealed class NeshinWriteDbContext(DbContextOptions<NeshinWriteDbContext> 
         builder.ApplyConfiguration(new BranchCustomerConfiguration());
         builder.ApplyConfiguration(new OrderConfiguration());
         builder.ApplyConfiguration(new OrderItemConfiguration());
+        builder.ApplyConfiguration(new InvoiceConfiguration());
+        builder.ApplyConfiguration(new InvoiceItemConfiguration());
     }
 }

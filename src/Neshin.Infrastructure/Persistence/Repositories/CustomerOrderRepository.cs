@@ -95,7 +95,8 @@ public sealed class CustomerOrderRepository(
             request.IdempotencyKey,
             branch.AcceptsAppOrders,
             branch.AllowsPayAtVenue,
-            now);
+            now,
+            null);
 
         foreach (var requestedItem in request.Items)
         {

@@ -20,6 +20,34 @@ public sealed class CustomerProfile : AggregateRoot
     public static CustomerProfile CreateGuest(DateTime createdAtUtc) =>
         new(Guid.NewGuid(), createdAtUtc);
 
+    public static CustomerProfile CreateRegistered(
+        Guid userId,
+        string displayName,
+        string phoneNumber,
+        DateTime createdAtUtc)
+    {
+        if (userId == Guid.Empty) throw new DomainException("User is required.");
+
+        var profile = new CustomerProfile(Guid.NewGuid(), createdAtUtc)
+        {
+            UserId = userId,
+            DisplayName = NormalizeOptional(displayName, 100),
+            ContactPhoneNumber = NormalizeOptional(phoneNumber, 30),
+            IsPhoneNumberVerified = true
+        };
+
+        if (profile.DisplayName is null) throw new DomainException("Customer name is required.");
+        return profile;
+    }
+
+    public void UpdateRegisteredContact(string displayName, string phoneNumber)
+    {
+        DisplayName = NormalizeOptional(displayName, 100)
+            ?? throw new DomainException("Customer name is required.");
+        ContactPhoneNumber = NormalizeOptional(phoneNumber, 30);
+        IsPhoneNumberVerified = true;
+    }
+
     public void SetOptionalContact(string? displayName, string? phoneNumber)
     {
         DisplayName = NormalizeOptional(displayName, 100);

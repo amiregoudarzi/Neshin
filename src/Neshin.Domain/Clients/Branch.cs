@@ -34,6 +34,8 @@ public sealed class Branch : AggregateRoot
     public string? PublicPhoneNumber { get; private set; }
     public string? LogoUrl { get; private set; }
     public string? CoverImageUrl { get; private set; }
+    public string[] PhotoUrls { get; private set; } = [];
+    public string ManagementKeyHash { get; private set; } = string.Empty;
     public DateTime CreatedAtUtc { get; private init; }
 
     public static Branch Create(
@@ -69,6 +71,25 @@ public sealed class Branch : AggregateRoot
     }
 
     public void SetPayAtVenue(bool enabled) => AllowsPayAtVenue = enabled;
+
+    public void SetManagementKeyHash(string hash)
+    {
+        if (string.IsNullOrWhiteSpace(hash)) throw new DomainException("Management key hash is required.");
+        ManagementKeyHash = hash.Trim();
+    }
+
+    public void SetPhotos(IEnumerable<string>? photoUrls)
+    {
+        PhotoUrls = photoUrls?
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(value => value.Trim())
+            .Distinct(StringComparer.Ordinal)
+            .Take(10)
+            .ToArray() ?? [];
+
+        if (PhotoUrls.Any(value => value.Length > 2000))
+            throw new DomainException("A cafe photo URL cannot exceed 2000 characters.");
+    }
 
     public void UpdatePublicProfile(
         string? description,

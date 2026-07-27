@@ -10,6 +10,7 @@ public sealed class Order : AggregateRoot
         Guid id,
         Guid branchId,
         Guid customerId,
+        Guid? userId,
         PaymentMethod paymentMethod,
         string idempotencyKey,
         DateTime createdAtUtc)
@@ -17,6 +18,7 @@ public sealed class Order : AggregateRoot
     {
         BranchId = branchId;
         CustomerId = customerId;
+        UserId = userId;
         PaymentMethod = paymentMethod;
         IdempotencyKey = idempotencyKey;
         CreatedAtUtc = createdAtUtc;
@@ -53,7 +55,8 @@ public sealed class Order : AggregateRoot
         string idempotencyKey,
         bool branchAcceptsAppOrders,
         bool branchAllowsPayAtVenue,
-        DateTime createdAtUtc)
+        DateTime createdAtUtc,
+        Guid? userId = null)
     {
         if (branchId == Guid.Empty || customerId == Guid.Empty)
         {
@@ -73,7 +76,7 @@ public sealed class Order : AggregateRoot
             throw new DomainException("Pay at venue is not enabled for this branch.");
         }
 
-        return new Order(Guid.NewGuid(), branchId, customerId, paymentMethod, idempotencyKey.Trim(), createdAtUtc);
+        return new Order(Guid.NewGuid(), branchId, customerId, userId, paymentMethod, idempotencyKey.Trim(), createdAtUtc);
     }
 
     public void AddItem(Guid menuItemId, string name, decimal unitPrice, int quantity)
