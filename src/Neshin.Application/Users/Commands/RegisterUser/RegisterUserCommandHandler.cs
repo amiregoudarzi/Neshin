@@ -29,15 +29,15 @@ public sealed class RegisterUserCommandHandler(
         {
             if (!existingUser.IsPhoneNumberVerified)
             {
-                existingUser.VerifyPhoneNumber(timeProvider.GetUtcNow());
+                existingUser.VerifyPhoneNumber(timeProvider.GetUtcNow().UtcDateTime);
                 await unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
             return new RegisterUserResult(existingUser.Id, false);
         }
 
-        var user = User.Create(normalizedPhoneNumber, timeProvider.GetUtcNow());
-        user.VerifyPhoneNumber(timeProvider.GetUtcNow());
+        var user = User.Create(normalizedPhoneNumber, timeProvider.GetUtcNow().UtcDateTime);
+        user.VerifyPhoneNumber(timeProvider.GetUtcNow().UtcDateTime);
         await userRepository.AddAsync(user, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

@@ -12,9 +12,10 @@ public sealed class OrderTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             PaymentMethod.PayAtVenuePos,
+            "test-key",
             branchAcceptsAppOrders: true,
             branchAllowsPayAtVenue: false,
-            DateTimeOffset.UtcNow));
+            DateTime.UtcNow));
     }
 
     [Fact]
@@ -24,9 +25,10 @@ public sealed class OrderTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             PaymentMethod.Online,
+            "test-key",
             branchAcceptsAppOrders: true,
             branchAllowsPayAtVenue: false,
-            DateTimeOffset.UtcNow);
+            DateTime.UtcNow);
 
         order.AddItem(Guid.NewGuid(), "Latte", 180_000m, 2);
 

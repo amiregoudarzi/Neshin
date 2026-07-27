@@ -4,7 +4,7 @@ namespace Neshin.Domain.Identity;
 
 public sealed class User : AggregateRoot
 {
-    private User(Guid id, string phoneNumber, DateTimeOffset createdAtUtc)
+    private User(Guid id, string phoneNumber, DateTime createdAtUtc)
         : base(id)
     {
         PhoneNumber = phoneNumber;
@@ -17,16 +17,16 @@ public sealed class User : AggregateRoot
 
     public string PhoneNumber { get; private set; } = string.Empty;
     public bool IsPhoneNumberVerified { get; private set; }
-    public DateTimeOffset CreatedAtUtc { get; private init; }
-    public DateTimeOffset? PhoneNumberVerifiedAtUtc { get; private set; }
+    public DateTime CreatedAtUtc { get; private init; }
+    public DateTime? PhoneNumberVerifiedAtUtc { get; private set; }
 
-    public static User Create(string phoneNumber, DateTimeOffset createdAtUtc)
+    public static User Create(string phoneNumber, DateTime createdAtUtc)
     {
         var normalizedPhoneNumber = NormalizePhoneNumber(phoneNumber);
         return new User(Guid.NewGuid(), normalizedPhoneNumber, createdAtUtc);
     }
 
-    public void VerifyPhoneNumber(DateTimeOffset verifiedAtUtc)
+    public void VerifyPhoneNumber(DateTime verifiedAtUtc)
     {
         IsPhoneNumberVerified = true;
         PhoneNumberVerifiedAtUtc = verifiedAtUtc;

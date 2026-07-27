@@ -10,5 +10,7 @@ public enum OrderStatus
     Ready = 6,
     Completed = 7,
     PaymentFailed = 8,
-    Cancelled = 9
+    Cancelled = 9,
+    Submitted = 10,
+    Rejected = 11
 }

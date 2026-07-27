@@ -5,31 +5,33 @@
 - Customers order only while physically at the venue; discovery uses device location.
 - A branch must explicitly activate `AcceptsAppOrders` in its web application.
 - Online payment happens before the restaurant accepts the order.
-- Customers are identified by Iranian mobile number and OTP is mandatory.
+- Discovery, browsing, venue visits, ordering, and order tracking work through an anonymous customer session.
+- Phone number is optional contact data. OTP is required only when a customer later claims an account or verifies ownership of a phone number.
 - Every branch has an independent menu.
 - Pay-at-venue/POS is an optional branch setting and can be enabled or disabled by the restaurant.
 
 ## Main customer flow
 
-1. Verify phone number with OTP.
-2. Submit location and discover the branch.
-3. Confirm that the branch is active and currently accepts app orders.
-4. Load its published menu.
-5. Create an order and snapshot selected item names and prices.
-6. Revalidate availability and prices with the write side.
-7. Select online payment, or POS only when enabled for the branch.
-8. For online payment, verify the gateway callback before moving to `Paid`.
-9. Let restaurant staff accept and process the paid order.
+1. Create or restore an anonymous customer session; no phone or OTP is required.
+2. The PWA asks the browser for location permission and submits the coordinates to discovery.
+3. Resolve zero, one, or multiple nearby branches. The API returns all candidates to support co-located venues.
+4. Load the active branch's public profile, published menus/items, and events.
+5. Optionally record a privacy-preserving venue visit without storing exact coordinates.
+6. Create an idempotent order containing menu item ids and quantities only.
+7. Revalidate branch state, menu publication, item availability, names, and prices on the write database.
+8. Submit pay-at-venue orders to the venue queue. Online orders remain `AwaitingPayment` until a verified payment callback exists.
+9. Let authorized branch staff accept, reject, prepare, mark ready, and complete the order.
+10. Ask for a name/phone only when useful, and expose the phone to the branch only with explicit call consent.
 
 ## Delivery slices
 
-1. Identity: request/verify OTP, user persistence, custom token implementation.
-2. Clients: client/branch onboarding and ordering/payment switches.
-3. Catalog: branch menu administration and customer menu query.
-4. Discovery: nearest active branch with an explicit confidence/radius policy.
-5. Ordering: draft, item snapshot, consistency validation, submit, and status workflow.
-6. Payments: gateway strategy, idempotent callback, verification, and reconciliation.
-7. Pilot hardening: authorization, audit trail, rate limiting, observability, backup, and integration tests.
+1. Anonymous experience: secure customer session, discovery, storefront, visits, and order tracking.
+2. Catalog/content: branch menu items, public profile, events, and owner administration UI.
+3. Ordering: server-priced item snapshots, idempotency, optimistic concurrency, and venue workflow.
+4. Branch operations: branch-scoped access, order queue, active visits, and CRM archive/restore.
+5. Optional identity: request/verify OTP, claim a guest profile, and merge customer history.
+6. Payments: gateway strategy, idempotent callback, verification, rejection/refund policy, and reconciliation.
+7. Pilot hardening: staff roles, audit trail, observability, backup, and integration tests.
 
 ## Deferred from MVP
 

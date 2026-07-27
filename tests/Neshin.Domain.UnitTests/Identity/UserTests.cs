@@ -10,7 +10,7 @@ public sealed class UserTests
     [InlineData("00989121234567", "09121234567")]
     public void Create_NormalizesIranianPhoneNumber(string input, string expected)
     {
-        var user = User.Create(input, DateTimeOffset.UtcNow);
+        var user = User.Create(input, DateTime.UtcNow);
 
         Assert.Equal(expected, user.PhoneNumber);
     }
