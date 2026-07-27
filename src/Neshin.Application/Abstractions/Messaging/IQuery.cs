@@ -4,5 +4,5 @@ public interface IQuery<out TResponse>;
 
 public interface IQueryHandler<in TQuery, TResponse> where TQuery : IQuery<TResponse>
 {
-    Task<TResponse> HandleAsync(TQuery query, CancellationToken cancellationToken);
+    public Task<TResponse> HandleAsync(TQuery query, CancellationToken cancellationToken);
 }
