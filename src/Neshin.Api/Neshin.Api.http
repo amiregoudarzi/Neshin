@@ -1,6 +1,16 @@
 @Neshin_Api_HostAddress = http://localhost:5198
 
-GET {{Neshin_Api_HostAddress}}/health
+POST {{Neshin_Api_HostAddress}}/api/v1/users/quick-sign-up
+Content-Type: application/json
+
+{
+  "phoneNumber": "09121234567",
+  "name": "Sample User"
+}
+
+###
+
+GET {{Neshin_Api_HostAddress}}/api/v1/users/cafes?nearbyOnly=true&latitude=35.7219&longitude=51.3347&radiusMeters=1000
 Accept: application/json
 
 ###

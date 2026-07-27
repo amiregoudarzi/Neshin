@@ -9,6 +9,7 @@ using Neshin.Infrastructure.CustomerExperience;
 using Neshin.Infrastructure.Persistence;
 using Neshin.Infrastructure.Persistence.Repositories;
 using Neshin.Api.Http;
+using Neshin.Application.Abstractions.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,9 @@ builder.Services.AddScoped<IUserReadRepository, UserReadRepository>();
 builder.Services.AddScoped<IPublicExperienceRepository, PublicExperienceRepository>();
 builder.Services.AddScoped<ICustomerOrderRepository, CustomerOrderRepository>();
 builder.Services.AddScoped<IOwnerExperienceRepository, OwnerExperienceRepository>();
+builder.Services.AddScoped<IUserExperienceRepository, UserExperienceRepository>();
+builder.Services.AddScoped<IClientExperienceRepository, ClientExperienceRepository>();
+builder.Services.AddScoped<IOtpVerifier, ConfigurationOtpVerifier>();
 
 builder.Services.SwaggerDocument(settings =>
 {
@@ -120,6 +124,7 @@ app.UseExceptionHandler(exceptionHandlerApp =>
             RequestUnauthorizedException => StatusCodes.Status401Unauthorized,
             ResourceNotFoundException => StatusCodes.Status404NotFound,
             RequestConflictException => StatusCodes.Status409Conflict,
+            FeatureNotAvailableException => StatusCodes.Status501NotImplemented,
             _ => StatusCodes.Status500InternalServerError
         };
 
@@ -132,16 +137,13 @@ app.UseExceptionHandler(exceptionHandlerApp =>
                     StatusCodes.Status401Unauthorized => "Unauthorized",
                     StatusCodes.Status404NotFound => "Resource not found",
                     StatusCodes.Status409Conflict => "Request conflict",
+                    StatusCodes.Status501NotImplemented => "Feature not available",
                     _ => "Unexpected server error"
                 },
                 detail: statusCode < 500 ? exception?.Message : null)
             .ExecuteAsync(context);
     });
 });
-
-app.MapGet("/health", () => Results.Ok(new { status = "healthy", service = "Neshin.Api" }))
-    .WithName("Health")
-    .WithTags("System");
 
 app.UseFastEndpoints(options =>
 {
